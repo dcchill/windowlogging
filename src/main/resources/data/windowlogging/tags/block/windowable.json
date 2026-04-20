@@ -8,9 +8,9 @@
     "#minecraft:walls",
     "#minecraft:fences",
     "#minecraft:wooden_fences",
-    "#forge:fences",
-    "#forge:fences/wooden",
-    "#forge:fences/nether_brick",
+    "#c:fences",
+    "#c:fences/wooden",
+    "#c:fences/nether_brick",
     { "id": "doubleslabs:vertical_slab", "required": false },
     { "id": "#quark:vertical_slab", "required": false }
   ]

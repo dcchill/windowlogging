@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "#forge:glass_panes",
+    "#c:glass_panes",
     "minecraft:iron_bars",
     { "id": "quark:gold_bars", "required": false },
     { "id": "quark:red_crystal_pane", "required": false },

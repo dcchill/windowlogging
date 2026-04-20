@@ -1,7 +1,7 @@
 {
     "pack": {
-        "description": "modid resources",
-        "pack_format": 15,
-        "_comment": "A pack_format of 15 targets Minecraft 1.20.1 resources."
+        "description": "windowlogging resources",
+        "pack_format": 34,
+        "_comment": "A pack_format of 34 targets Minecraft 1.21 - 1.21.1 resources."
     }
 }
