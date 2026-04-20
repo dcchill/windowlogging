@@ -21,8 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -49,7 +48,7 @@ import java.util.function.Consumer;
 public class WindowInABlockBlock extends IronBarsBlock implements EntityBlock {
 
 	public WindowInABlockBlock() {
-		super(Properties.of(Material.STONE).noOcclusion());
+		super(Properties.copy(Blocks.IRON_BARS).noOcclusion());
 	}
 
 	private static void addBlockHitEffects(ParticleEngine manager, BlockPos pos, BlockHitResult target, BlockState blockstate, ClientLevel world) {
@@ -96,7 +95,7 @@ public class WindowInABlockBlock extends IronBarsBlock implements EntityBlock {
 									   boolean willHarvest, FluidState fluid) {
 
 		Vec3 start = player.getEyePosition(1);
-		AttributeInstance reachDistanceAttribute = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
+		AttributeInstance reachDistanceAttribute = player.getAttribute(ForgeMod.BLOCK_REACH.get());
 		if (reachDistanceAttribute == null)
 			return super.onDestroyedByPlayer(state, world, pos, null, willHarvest, fluid);
 		Vec3 end = start.add(player.getLookAngle().scale(reachDistanceAttribute.getValue()));
@@ -147,6 +146,21 @@ public class WindowInABlockBlock extends IronBarsBlock implements EntityBlock {
 	}
 
 	@Override
+	public boolean useShapeForLightOcclusion(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public int getLightBlock(BlockState state, BlockGetter world, BlockPos pos) {
+		return getSurroundingBlockState(world, pos).getLightBlock(world, pos);
+	}
+
+	@Override
+	public float getShadeBrightness(BlockState state, BlockGetter world, BlockPos pos) {
+		return getSurroundingBlockState(world, pos).getShadeBrightness(world, pos);
+	}
+
+	@Override
 	public boolean collisionExtendsVertically(BlockState state, BlockGetter world, BlockPos pos,
 											  Entity collidingEntity) {
 		return getSurroundingBlockState(world, pos).collisionExtendsVertically(world, pos, collidingEntity);
@@ -174,17 +188,15 @@ public class WindowInABlockBlock extends IronBarsBlock implements EntityBlock {
 		return surrounding.getCloneItemStack(target, world, pos, player);
 	}
 
-	@Override
-	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+	public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
 		BlockEntity tileentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 		if (!(tileentity instanceof WindowInABlockTileEntity te))
 			return Collections.emptyList();
 
 		BlockEntity partialTE = te.getPartialBlockTileEntityIfPresent();
-		if (partialTE != null)
-			builder.withParameter(LootContextParams.BLOCK_ENTITY, partialTE);
+		builder.withOptionalParameter(LootContextParams.BLOCK_ENTITY, partialTE);
 		List<ItemStack> drops = te.getPartialBlock().getDrops(builder);
-		builder.withParameter(LootContextParams.BLOCK_ENTITY, tileentity);
+		builder.withOptionalParameter(LootContextParams.BLOCK_ENTITY, tileentity);
 		drops.addAll(te.getWindowBlock().getDrops(builder));
 		return drops;
 	}
@@ -315,7 +327,7 @@ public class WindowInABlockBlock extends IronBarsBlock implements EntityBlock {
 		WindowInABlockTileEntity te = getTileEntity(world, pos);
 		if (te != null) {
 			BlockState partialState = te.getPartialBlock();
-			partialState.getBlock().getLightEmission(partialState, world, pos);
+			return partialState.getLightEmission(world, pos);
 		}
 		return 0;
 	}

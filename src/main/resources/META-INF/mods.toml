@@ -1,27 +1,30 @@
 modLoader = "javafml"
-license = "MIT license"
-loaderVersion = "[43,)"
+loaderVersion = "${loader_version_range}"
+license = "${mod_license}"
 #issueTrackerURL=""
 
 [[mods]]
-modId = "windowlogging"
-version = "0.0.9"
-displayName = "Windowlogging"
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
 #updateJSONURL=""
-authors = "Simibubi, Grimmauld"
+authors = "${mod_authors}"
 description = '''
-Windowlogging, ported from Create 1.14.4'''
+${mod_description}'''
+
+[[accessTransformers]]
+file = "META-INF/accesstransformer.cfg"
 
 [[dependencies.windowlogging]]
 modId = "forge"
 mandatory = true
-versionRange = "[43,)"
+versionRange = "${forge_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.windowlogging]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19.2,1.19.3)"
+versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"

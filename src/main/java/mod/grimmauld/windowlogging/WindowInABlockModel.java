@@ -111,4 +111,14 @@ public class WindowInABlockModel extends BakedModelWrapper<BakedModel> {
 	public boolean useAmbientOcclusion(BlockState state, RenderType renderType) {
 		return renderType == RenderType.solid();
 	}
+
+	@Override
+	public boolean useAmbientOcclusion() {
+		return true;
+	}
+
+	@Override
+	public boolean useAmbientOcclusion(BlockState state) {
+		return true;
+	}
 }

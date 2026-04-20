@@ -3,6 +3,7 @@ package mod.grimmauld.windowlogging;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -43,8 +44,8 @@ public class WindowInABlockTileEntity extends BlockEntity {
 	@Override
 	public void load(CompoundTag compound) {
 		super.load(compound);
-		partialBlock = NbtUtils.readBlockState(compound.getCompound("PartialBlock"));
-		windowBlock = NbtUtils.readBlockState(compound.getCompound("WindowBlock"));
+		partialBlock = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), compound.getCompound("PartialBlock"));
+		windowBlock = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), compound.getCompound("WindowBlock"));
 		setPartialBlockTileData(compound.getCompound("PartialData"));
 		requestModelDataUpdate();
 	}
@@ -108,7 +109,7 @@ public class WindowInABlockTileEntity extends BlockEntity {
 			try {
 				partialBlockTileEntity = entityBlock.newBlockEntity(worldPosition, partialBlock);
 				if (partialBlockTileEntity != null) {
-					partialBlockTileEntity.blockState = getPartialBlock();
+					partialBlockTileEntity.setBlockState(getPartialBlock());
 					partialBlockTileEntity.deserializeNBT(partialBlockTileData);
 					partialBlockTileEntity.setLevel(level);
 				}
